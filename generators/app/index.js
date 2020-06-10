@@ -9,9 +9,9 @@ const yoHelper = require("@feizheng/yeoman-generator-helper");
 const replace = require("replace-in-file");
 
 module.exports = class extends Generator {
-  initializing() {
-    // this.composeWith("dotfiles:stdapp");
-  }
+  // initializing() {
+  //   // this.composeWith("dotfiles:stdapp");
+  // }
 
   prompting() {
     // Have Yeoman greet the user.
@@ -72,7 +72,10 @@ module.exports = class extends Generator {
 
     replace.sync({
       files,
-      from: [/boilerplate-tiny-rails-description/g, /boilerplate-tiny-rails/g],
+      from: [
+        /boilerplate-tiny-rails-description/g,
+        /boilerplate-tiny-rails/g
+      ],
       to: [description, project_name]
     });
   }
