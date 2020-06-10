@@ -34,11 +34,16 @@ module.exports = class extends Generator {
         type: "input",
         name: "description",
         message: "Your description?"
+      },
+      {
+        type: "input",
+        name: "db_name",
+        message: "Your db_name(eg: template)?"
       }
     ];
 
     return this.prompt(prompts).then(
-      function(props) {
+      function (props) {
         // To access props later use this.props.someAnswer;
         this.props = props;
         yoHelper.rewriteProps(props);
@@ -55,28 +60,31 @@ module.exports = class extends Generator {
     remote(
       "afeiship",
       "boilerplate-tiny-rails",
-      function(err, cachePath) {
+      function (err, cachePath) {
         // copy files:
         this.fs.copy(
           glob.sync(resolve(cachePath, "{**,.*}")),
           this.destinationPath()
         );
+        yoHelper.rename(this, 'template', this.props.db_name);
         done();
       }.bind(this)
     );
   }
 
   end() {
-    const { project_name, description } = this.props;
+    const { db_name, DbName, project_name, description } = this.props;
     const files = glob.sync(resolve(this.destinationPath(), "{**,.*}"));
 
     replace.sync({
       files,
       from: [
+        /boilerplate_db_name/g,
+        /BoilerplateDbName/g,
         /boilerplate-tiny-rails-description/g,
         /boilerplate-tiny-rails/g
       ],
-      to: [description, project_name]
+      to: [db_name, DbName, description, project_name]
     });
   }
 };
