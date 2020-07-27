@@ -104,6 +104,7 @@ module.exports = class extends Generator {
 
     // select the right code:
     fs.renameSync(`./src/initialize.${db_type}.rb`, './src/initialize.rb');
+    fs.renameSync(`./src/app.${db_type}.rb`, './src/app.rb');
     fs.renameSync(`./tasks/db.${db_type}.rake`, './tasks/db.rake');
     del.sync('**/*.{mysql,sqlite}.{rb,rake}');
   }
