@@ -7,6 +7,13 @@ const { resolve } = require("path");
 const remote = require("yeoman-remote");
 const yoHelper = require("@feizheng/yeoman-generator-helper");
 const replace = require("replace-in-file");
+const del = require('del');
+const fs = require('fs');
+
+const DB_TYPES = [
+  { name: 'sqlite', value: 'sqlite' },
+  { name: 'mysql', value: 'mysql' },
+];
 
 module.exports = class extends Generator {
   // initializing() {
@@ -39,7 +46,14 @@ module.exports = class extends Generator {
         type: "input",
         name: "db_name",
         message: "Your db_name(eg: template)?"
-      }
+      },
+      {
+        type: 'list',
+        name: 'db_type',
+        message: 'Your db_type(default: sqlite)',
+        default: 'sqlite',
+        choices: DB_TYPES
+      },
     ];
 
     return this.prompt(prompts).then(
@@ -73,8 +87,9 @@ module.exports = class extends Generator {
   }
 
   end() {
-    const { db_name, DbName, project_name, description } = this.props;
+    const { db_name, db_type, DbName, project_name, description } = this.props;
     const files = glob.sync(resolve(this.destinationPath(), "{**,.*}"));
+    const exculde = db_type === 'sqlite' ? 'mysql' : 'sqlite';
 
     replace.sync({
       files,
@@ -86,5 +101,10 @@ module.exports = class extends Generator {
       ],
       to: [db_name, DbName, description, project_name]
     });
+
+    // select the right code:
+    fs.renameSync(`./src/initialize.${db_type}.rb`, './src/initialize.rb');
+    fs.renameSync(`./tasks/db.${db_type}.rake`, './tasks/db.rake');
+    del.sync('**/*.{mysql,sqlite}.{rb,rake}');
   }
 };
