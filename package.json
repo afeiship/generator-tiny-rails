@@ -1,5 +1,5 @@
 {
-  "name": "@feizheng/generator-tiny-rails",
+  "name": "@jswork/generator-tiny-rails",
   "version": "1.0.0",
   "description": "generator-tiny-rails-description",
   "homepage": "https://github.com/afeiship/generator-tiny-rails",
@@ -12,9 +12,9 @@
     "generators"
   ],
   "keywords": [
-    "yeoman",
-    "yo",
-    "yeoman-generator"
+    "generator",
+    "rails",
+    "tiny"
   ],
   "devDependencies": {
     "prettier": "^2.0.5",
