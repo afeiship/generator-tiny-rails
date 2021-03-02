@@ -7,12 +7,12 @@ const { resolve } = require("path");
 const remote = require("yeoman-remote");
 const yoHelper = require("@jswork/yeoman-generator-helper");
 const replace = require("replace-in-file");
-const del = require('del');
-const fs = require('fs');
+const del = require("del");
+const fs = require("fs");
 
 const DB_TYPES = [
-  { name: 'sqlite', value: 'sqlite' },
-  { name: 'mysql', value: 'mysql' },
+  { name: "sqlite", value: "sqlite" },
+  { name: "mysql", value: "mysql" },
 ];
 
 require("@jswork/next-registry-choices");
@@ -94,7 +94,7 @@ module.exports = class extends Generator {
           glob.sync(resolve(cachePath, "{**,.*}")),
           this.destinationPath()
         );
-        yoHelper.rename(this, 'template', this.props.db_name);
+        yoHelper.rename(this, "template", this.props.db_name);
         done();
       }.bind(this)
     );
@@ -103,7 +103,7 @@ module.exports = class extends Generator {
   end() {
     const { db_name, db_type, DbName, project_name, description } = this.props;
     const files = glob.sync(resolve(this.destinationPath(), "{**,.*}"));
-    const exculde = db_type === 'sqlite' ? 'mysql' : 'sqlite';
+    const exculde = db_type === "sqlite" ? "mysql" : "sqlite";
 
     replace.sync({
       files,
@@ -111,15 +111,16 @@ module.exports = class extends Generator {
         /boilerplate_db_name/g,
         /BoilerplateDbName/g,
         /boilerplate-tiny-rails-description/g,
-        /boilerplate-tiny-rails/g
+        /boilerplate-tiny-rails/g,
+        /boilerplate-scope/g,
       ],
-      to: [db_name, DbName, description, project_name]
+      to: [db_name, DbName, description, project_name, scope],
     });
 
     // select the right code:
-    fs.renameSync(`./src/initialize.${db_type}.rb`, './src/initialize.rb');
-    fs.renameSync(`./src/app.${db_type}.rb`, './src/app.rb');
-    fs.renameSync(`./tasks/db.${db_type}.rake`, './tasks/db.rake');
-    del.sync('**/*.{mysql,sqlite}.{rb,rake}');
+    fs.renameSync(`./src/initialize.${db_type}.rb`, "./src/initialize.rb");
+    fs.renameSync(`./src/app.${db_type}.rb`, "./src/app.rb");
+    fs.renameSync(`./tasks/db.${db_type}.rake`, "./tasks/db.rake");
+    del.sync("**/*.{mysql,sqlite}.{rb,rake}");
   }
 };
