@@ -5,7 +5,7 @@ const yosay = require("yosay");
 const glob = require("glob");
 const { resolve } = require("path");
 const remote = require("yeoman-remote");
-const yoHelper = require("@feizheng/yeoman-generator-helper");
+const yoHelper = require("@jswork/yeoman-generator-helper");
 const replace = require("replace-in-file");
 const del = require('del');
 const fs = require('fs');
@@ -14,6 +14,8 @@ const DB_TYPES = [
   { name: 'sqlite', value: 'sqlite' },
   { name: 'mysql', value: 'mysql' },
 ];
+
+require("@jswork/next-registry-choices");
 
 module.exports = class extends Generator {
   // initializing() {
@@ -33,26 +35,38 @@ module.exports = class extends Generator {
     const prompts = [
       {
         type: "input",
+        name: "scope",
+        message: "Your scope (eg: `babel` )?",
+        default: "jswork",
+      },
+      {
+        type: "list",
+        name: "registry",
+        message: "Your registry",
+        choices: nx.RegistryChoices.gets(),
+      },
+      {
+        type: "input",
         name: "project_name",
         message: "Your project_name (eg: like this `react-button` )?",
-        default: yoHelper.discoverRoot
+        default: yoHelper.discoverRoot,
       },
       {
         type: "input",
         name: "description",
-        message: "Your description?"
+        message: "Your description?",
       },
       {
         type: "input",
         name: "db_name",
-        message: "Your db_name(eg: template)?"
+        message: "Your db_name(eg: template)?",
       },
       {
-        type: 'list',
-        name: 'db_type',
-        message: 'Your db_type(default: sqlite)',
-        default: 'sqlite',
-        choices: DB_TYPES
+        type: "list",
+        name: "db_type",
+        message: "Your db_type(default: sqlite)",
+        default: "sqlite",
+        choices: DB_TYPES,
       },
     ];
 
